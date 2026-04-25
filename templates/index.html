@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Image Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-[#AAFFC7] via-[#67C090] to-[#215B63] min-h-screen flex items-center justify-center">
+
+<div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-8 w-full max-w-md text-center">
+
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-[#124170] mb-2">
+        AI Image Detection
+    </h1>
+
+    <p class="text-gray-600 mb-6">
+        Upload an image and detect objects instantly
+    </p>
+
+    <!-- Error -->
+    {% if error %}
+    <p class="text-red-500 mb-4">{{ error }}</p>
+    {% endif %}
+
+    <!-- Upload Form -->
+    <form id="uploadForm" action="/predict" method="post" enctype="multipart/form-data" class="space-y-4">
+
+        <!-- Drag & Drop Style Input -->
+        <label class="block border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-[#67C090] transition">
+            <input 
+                type="file" 
+                name="image" 
+                id="fileInput"
+                required
+                class="hidden"
+                onchange="previewImage(event)"
+            >
+
+            <p class="text-gray-500">Click to upload or drag image</p>
+        </label>
+
+        <!-- Preview -->
+        <img id="preview" class="hidden rounded-xl shadow-md mx-auto max-h-48"/>
+
+        <!-- Button -->
+        <button 
+            type="submit"
+            id="detectBtn"
+            class="w-full bg-[#124170] text-white py-3 rounded-xl font-semibold hover:bg-[#0f334f] transition transform hover:scale-105"
+        >
+            Detect Objects
+        </button>
+
+        <!-- Loading -->
+        <div id="loading" class="hidden text-[#124170] font-semibold">
+            Detecting... ⏳
+        </div>
+
+    </form>
+
+    <!-- Result -->
+    {% if image %}
+    <div class="mt-6">
+        <h3 class="text-lg font-semibold text-[#124170] mb-3">
+            Detection Result
+        </h3>
+
+        <img src="{{ image }}" class="rounded-xl shadow-lg mx-auto border">
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- JS for Preview + Loading -->
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+    }
+}
+
+// Show loading when submitting
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    document.getElementById('detectBtn').classList.add('hidden');
+    document.getElementById('loading').classList.remove('hidden');
+});
+</script>
+
+</body>
+</html>
